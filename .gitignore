@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Large ML datasets
+Oil/
+Mask_oil/
+Lookalike_images/
+Mask_lookalike/
+No_Oil_images/
+Mask_no_oil/
+
+# Dataset archives
+*.7z
+*.zip
+*.tar
+*.gz
+
+# ML model checkpoints
+*.pth
+*.pt
+*.ckpt
+
+# macOS
+.DS_Store
+._*
+
+# Node
+node_modules/
+frontend/dist/
+
+# Logs
+*.log
+
+# Large test dataset
+02_Test_images_and_ground_truth/
+
+# Remote sensing / oceanographic / meteorological data
+*.nc
+*.tab
+
+# Generated analysis outputs
+phase*_result.json
+spill_detection_result.geojson

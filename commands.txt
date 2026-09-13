@@ -1,0 +1,70 @@
+SIH26143 / OilShield - RUN AND STARTUP COMMANDS
+
+1. BACKEND (FastAPI + PyTorch ML Model + Environmental Hindcasting)
+
+cd "/Volumes/Utkash SSD/SIH26143"
+/opt/anaconda3/bin/python3 -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload
+
+
+Backend URLs once started:
+- API Server: http://127.0.0.1:8000
+- Interactive Swagger UI: http://127.0.0.1:8000/docs
+- ReDoc Documentation: http://127.0.0.1:8000/redoc
+- Health Check: http://127.0.0.1:8000/api/v1/health
+
+
+
+2. FRONTEND (React + TypeScript + Vite + Leaflet)
+Navigate to the frontend directory and start the Vite dev server:
+
+cd "/Volumes/Utkash SSD/SIH26143/frontend"
+npm run dev
+
+
+Frontend URL once started:
+- Web Dashboard: http://localhost:5173 (or http://127.0.0.1:5173)
+
+
+--------------------------------------------------------------------------------
+3. ML / SCIENTIFIC PIPELINES & JUPYTER NOTEBOOKS
+--------------------------------------------------------------------------------
+To run or inspect the research notebooks (Phases 1 to 5):
+
+Launch Jupyter Notebook:
+------------------------
+cd "/Volumes/Utkash SSD/SIH26143"
+/opt/anaconda3/bin/jupyter notebook
+
+Notebooks available in notebooks/:
+- notebooks/Oil_Spill_Segmentation.ipynb  (Phase 1: U-Net training & evaluation)
+- notebooks/Spill_Analysis.ipynb          (Phase 2: SAR inference & geometry)
+- notebooks/Hindcasting.ipynb             (Phase 3: Lagrangian backward drift)
+- notebooks/AIS_Attributes.ipynb          (Phase 4: Vessel attribution scoring)
+- notebooks/Integration.ipynb             (Phase 5: Unified dynamic pipeline)
+
+
+--------------------------------------------------------------------------------
+4. COMMAND-LINE PIPELINE TEST (Quick Verification)
+--------------------------------------------------------------------------------
+Run an end-to-end scientific test against 00000.tif from terminal:
+
+/opt/anaconda3/bin/python3 -c "
+import sys
+sys.path.insert(0, '/Volumes/Utkash SSD/SIH26143/backend')
+from pathlib import Path
+from app.core.config import settings
+from app.models.unet import ModelManager
+from app.services.investigation_service import run_investigation
+
+ModelManager.initialize(settings.MODEL_PATH)
+resp = run_investigation(
+    sar_image_path=Path('/Volumes/Utkash SSD/SIH26143/Oil/00000.tif'),
+    observation_time='2019-10-19T15:56:47+00:00',
+    latitude=32.54197363135603,
+    longitude=30.16044382807175
+)
+print('Spill Centroid:', resp.spill_detection.centroid)
+print('Hindcast Origin:', resp.hindcast.ensemble_origin)
+print('Top Candidate MMSI:', resp.top_candidate.mmsi, '| Score:', resp.top_candidate.attribution_score_pct, '%')
+"
+================================================================================
